@@ -12,10 +12,16 @@ import math
 
 
 class CreatableResource(CreatableResourceInterface):
-    def create_item(self, item):
+    def create_item(self, item, files=None):
         url = self._endpoint
         logger.debug(json.dumps(item, separators=(',', ':')))
-        r = self._session.post(url, data=json.dumps(item, separators=(',', ':')))
+
+        if files is None:
+            r = self._session.post(url, data=json.dumps(item, separators=(',', ':')))
+        else:
+            self._session.headers.pop('Content-Type')
+            r = self._session.post(url, files=files, data=item)
+            self._session.headers.update({'Content-Type', 'application/json'})
 
         if r.status_code != 201:
             raise requests.HTTPError("Status code: {0}. Content: {1}".format(
