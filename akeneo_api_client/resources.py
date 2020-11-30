@@ -21,7 +21,7 @@ class CreatableResource(CreatableResourceInterface):
         else:
             self._session.headers.pop('Content-Type')
             r = self._session.post(url, files=files, data=item)
-            self._session.headers.update({'Content-Type', 'application/json'})
+            self._session.headers.update({'Content-Type': 'application/json'})
 
         if r.status_code != 201:
             raise requests.HTTPError("Status code: {0}. Content: {1}".format(
